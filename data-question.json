@@ -4,7 +4,7 @@
     "text":["Hi", "Hey", "Halo", "Hey"],
     "answer_id":1,
     "nextAnswerId":0,
-    "prefix":true,
+    "prefix":false,
     "postfix":true,
     "behaviour":false,
     "uniqueAnswer":true

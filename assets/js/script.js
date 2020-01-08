@@ -1,10 +1,18 @@
+
+var nextQuestionTimeout=3000, intervalNQT=0,BreakException={};
+var questions = [];
+var answer = [];
+var excludeAnswer = [
+  'I dont understand what do you want?',
+  'Sorry, what?'
+];
 var user={
   me:{image:'assets/img/me.png',name:'Me',message:''},
   bot:{image:'assets/img/bot.png',name:'BOT',message:''},
 }
 var config={
   template:{
-    showTime:false,
+    showTime:true,
   },
   chat:{
     fastResponse:false,
@@ -56,68 +64,10 @@ var template={
     return html;
   },
 }
-var nextQuestionTimeout=3000, intervalNQT=0,BreakException={};
-var questions = [
-  {
-    question_id:1,
-    text:["Hi", "Hey", "Halo", "Hey"],
-    answer_id:1,
-    nextAnswerId:0,
-    prefix:true,
-    postfix:true,
-    behaviour:false,
-    uniqueAnswer:true,
-  },{
-    question_id:1,
-    text:["What","Whats"],
-    answer_id:2,
-    nextAnswerId:0,
-    prefix:true,
-    postfix:true,
-    behaviour:false,
-    uniqueAnswer:true,
-  }
-];
-questions.forEach(function(v,k){
-  var pattern = '';
-  if(v.prefix){
-    pattern+="^.*?";
-  }
-  pattern+="("+v.text.join('|').toLowerCase()+")";
-  if(v.postfix){
-    pattern+='.*$';
-  }
-  questions[k].regex = new RegExp(pattern,"i");
-})
-var answer = [
-  {
-    answer_id:1,
-    list:[
-      {
-        hit:0,
-        text:"Ohh hello",
-      },{
-        hit:0,
-        text:"It's me",
-      }
-    ]
-  },{
-    answer_id:2,
-    list:[
-      {
-        hit:0,
-        text:"I don't know",
-      },{
-        hit:0,
-        text:"I want say something",
-      }
-    ]
-  }
-];
-var excludeAnswer = [
-  'I dont understand what do you want?',
-  'Sorry, what?'
-];
+
+function timeout(ms){
+  return new Promise(resolve=>setTimeout(resolve,ms));
+}
 function renewSearchTime(){
   if(config.chat.fastResponse){
     return 100;
@@ -148,10 +98,8 @@ function get_answer(answer_id){
     resolve(result)
   });
 }
-function timeout(ms){
-  return new Promise(resolve=>setTimeout(resolve,ms));
-}
 async function match_answer(keyword){
+  $('.loading-animation').show()
   await timeout(renewSearchTime());
   keyword = keyword.toLowerCase()
   return await new Promise(async function(resolve,reject){
@@ -162,12 +110,14 @@ async function match_answer(keyword){
         curr_answer = get_answer(v.answer_id);
         flag=true;
         resolve(curr_answer);
+        $('.loading-animation').hide()
       }
       if(flag){return;}
     })
     if(flag){return;}
     curr_answer=excludeAnswer[Math.floor(Math.random()*excludeAnswer.length)];
     resolve(curr_answer)
+    $('.loading-animation').hide()
   })
 }
 $('#input-message').on('keyup',function(e){
@@ -180,15 +130,29 @@ async function search(){
   user.me.message = $('#input-message').val();
   $('#input-message').val('');
   $('#chat').append(template.sender(user.me))
-  $('.loading-animation').show()
   $('.panel-body').get(0).scrollTop = $('.panel-body').height();
   user.bot.message = await match_answer(user.me.message);
-  $('.loading-animation').hide()
   $('#chat').append(template.receiver(user.bot))
   $('.panel-body').get(0).scrollTop = $('.panel-body').height();
 }
 function clearChat(){
   $('#chat').html('');
+}
+function getCurrentTime(){
+  var date = new Date();
+  var year = date.getFullYear();
+  var month = date.getMonth()+1;
+  var day = date.getDate();
+  var hours = date.getHours();
+  var minutes = date.getMinutes();
+  var seconds = date.getSeconds();
+  year = year.toString().padStart(4,0);
+  month = month.toString().padStart(2,0);
+  day = day.toString().padStart(2,0);
+  hours = hours.toString().padStart(2,0);
+  minutes = minutes.toString().padStart(2,0);
+  seconds = seconds.toString().padStart(2,0);
+  return year+'-'+month+'-'+day+' '+hours+':'+minutes+':'+seconds;
 }
 function loadDataJSON(){
   $.getJSON('data-answer.json',function(data){
@@ -200,9 +164,9 @@ function loadDataJSON(){
     if(data.length>0){
       questions = data;
       questions.forEach(function(v,k){
-        var pattern = '';
+        var pattern = '^';
         if(v.prefix){
-          pattern+="^.*?";
+          pattern+=".*?";
         }
         pattern+="("+v.text.join('|').toLowerCase()+")";
         if(v.postfix){
@@ -213,3 +177,4 @@ function loadDataJSON(){
     }
   });
 }
+loadDataJSON()

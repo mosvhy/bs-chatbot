@@ -41,3 +41,6 @@
 .loading-animation{
   display: none;
 }
+.nopadding{
+  padding:0px !important;
+}
