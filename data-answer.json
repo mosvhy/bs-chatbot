@@ -1,0 +1,33 @@
+[
+  {
+    "answer_id":1,
+    "list":[
+      {
+        "hit":0,
+        "text":"Ohh hello"
+      },{
+        "hit":0,
+        "text":"It's me"
+      }
+    ]
+  },{
+    "answer_id":2,
+    "list":[
+      {
+        "hit":0,
+        "text":"I don't know"
+      },{
+        "hit":0,
+        "text":"I want say something"
+      }
+    ]
+  },{
+    "answer_id":3,
+    "list":[
+      {
+        "hit":0,
+        "text":"🤨"
+      }
+    ]
+  }
+]

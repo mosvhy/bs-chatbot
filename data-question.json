@@ -1,0 +1,30 @@
+[
+  {
+    "question_id":1,
+    "text":["Hi", "Hey", "Halo", "Hey"],
+    "answer_id":1,
+    "nextAnswerId":0,
+    "prefix":true,
+    "postfix":true,
+    "behaviour":false,
+    "uniqueAnswer":true
+  },{
+    "question_id":1,
+    "text":["What","Whats"],
+    "answer_id":2,
+    "nextAnswerId":0,
+    "prefix":true,
+    "postfix":true,
+    "behaviour":false,
+    "uniqueAnswer":true
+  },{
+    "question_id":3,
+    "text":["Hmm"],
+    "answer_id":3,
+    "nextAnswerId":0,
+    "prefix":true,
+    "postfix":true,
+    "behaviour":false,
+    "uniqueAnswer":true
+  }
+]
